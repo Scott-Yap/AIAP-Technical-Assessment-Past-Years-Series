@@ -1,0 +1,25 @@
+# YAML is just a config format. In DevOps, it is often used for CI/CD and containers. 
+# In ML projects, it can also be used to store experiment settings such as data paths, 
+# train-test split settings, model hyperparameters, and output paths. 
+# This keeps the Python code reusable and avoids hardcoding values.
+
+
+
+data:
+  db_path: "data/score.db"
+  table_name: "score"
+  target_col: "final_test"
+  drop_cols:
+    - "index"
+    - "student_id"
+
+split:
+  test_size: 0.2
+  random_state: 42
+
+models:
+  random_state: 42
+
+output:
+  metrics_path: "outputs/metrics.json"
+  model_path: "outputs/best_model.joblib"

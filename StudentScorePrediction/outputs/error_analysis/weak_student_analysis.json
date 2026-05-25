@@ -1,0 +1,8 @@
+{
+    "weak_threshold": 50,
+    "n_actual_weak_students": 374,
+    "n_predicted_weak_students": 273,
+    "n_missed_weak_students": 127,
+    "weak_student_recall": 0.660427807486631,
+    "mean_absolute_error_for_weak_students": 5.296533940806669
+}

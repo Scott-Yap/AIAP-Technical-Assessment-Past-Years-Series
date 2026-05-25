@@ -1,0 +1,77 @@
+{
+    "best_model": "random_forest",
+    "selection_metric": "test_mae",
+    "note": "Hyperparameter tuning, where applied, used cross-validation on the training set only.",
+    "results": {
+        "dummy_mean": {
+            "tuned": false,
+            "best_params": null,
+            "best_cv_mae": null,
+            "train": {
+                "mae": 11.663968053510535,
+                "rmse": 13.988630372025922,
+                "r2": 0.0
+            },
+            "test": {
+                "mae": 11.61044427315242,
+                "rmse": 13.932549321482677,
+                "r2": -2.4047507507951593e-05
+            }
+        },
+        "ridge": {
+            "tuned": false,
+            "best_params": null,
+            "best_cv_mae": null,
+            "train": {
+                "mae": 7.265627670413702,
+                "rmse": 9.084397792354633,
+                "r2": 0.5782628133160129
+            },
+            "test": {
+                "mae": 7.23228042280996,
+                "rmse": 9.056850296905791,
+                "r2": 0.5774251521620573
+            }
+        },
+        "random_forest": {
+            "tuned": true,
+            "best_params": {
+                "model__max_depth": null,
+                "model__max_features": 1.0,
+                "model__min_samples_leaf": 2,
+                "model__n_estimators": 200
+            },
+            "best_cv_mae": 5.369041736877735,
+            "train": {
+                "mae": 2.5059336644030537,
+                "rmse": 3.5114047623845486,
+                "r2": 0.93698972165352
+            },
+            "test": {
+                "mae": 5.202863674615623,
+                "rmse": 7.169299609803024,
+                "r2": 0.735209301205607
+            }
+        },
+        "gradient_boosting": {
+            "tuned": true,
+            "best_params": {
+                "model__learning_rate": 0.1,
+                "model__max_depth": 3,
+                "model__min_samples_leaf": 1,
+                "model__n_estimators": 200
+            },
+            "best_cv_mae": 5.86868354610696,
+            "train": {
+                "mae": 5.706360449026859,
+                "rmse": 7.365324079781715,
+                "r2": 0.7227743999084004
+            },
+            "test": {
+                "mae": 5.91162040290894,
+                "rmse": 7.698931229305761,
+                "r2": 0.6946414069537103
+            }
+        }
+    }
+}

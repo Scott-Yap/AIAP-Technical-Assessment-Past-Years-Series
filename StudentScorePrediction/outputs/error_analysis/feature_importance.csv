@@ -1,0 +1,31 @@
+feature,importance
+num__number_of_siblings,0.2542567530600094
+num__hours_per_week,0.16919697419160287
+num__attendance_rate,0.1371371790507067
+num__n_male,0.07327772739106934
+num__n_female,0.06591161270952314
+cat__CCA_None,0.04986047485553348
+cat__direct_admission_Yes,0.04828178445654284
+cat__direct_admission_No,0.04067286141101489
+cat__learning_style_Auditory,0.0205410482996741
+cat__learning_style_Visual,0.020358945655938078
+cat__tuition_Yes,0.019219739923540518
+cat__tuition_No,0.017536469475984147
+num__sleep_hour,0.009781531027241577
+num__age,0.009302321444901044
+num__wake_hour,0.008454619120830637
+cat__CCA_Clubs,0.004636485455128783
+cat__mode_of_transport_private transport,0.004617501254914755
+cat__bag_color_yellow,0.004541930393166269
+cat__CCA_Arts,0.004488880630186448
+cat__bag_color_black,0.004398723306854099
+cat__bag_color_red,0.0043979133736019105
+cat__bag_color_green,0.0043517485386919165
+cat__bag_color_blue,0.0042511981916520435
+cat__bag_color_white,0.004032721930484783
+cat__CCA_Sports,0.003966647438950714
+cat__gender_Female,0.003897215000782299
+cat__gender_Male,0.003881178385512191
+cat__mode_of_transport_walk,0.0016517232124740261
+cat__mode_of_transport_public transport,0.0016227271309231955
+num__sleep_duration_hours,0.0014733636825638092
