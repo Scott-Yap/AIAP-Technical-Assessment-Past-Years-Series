@@ -32,8 +32,11 @@ def time_to_minutes(time_str: str) -> int:
     """
     Convert HH:MM time string to minutes after midnight.
     """
-    hour, minute = map(int, time_str.split(":"))
-    return hour * 60 + minute
+    try:
+        hour, minute = map(int, str(time_str).split(":"))
+        return hour * 60 + minute
+    except Exception as exc:
+        raise ValueError(f"Invalid time format: {time_str}") from exc
 
 
 def add_time_features(df: pd.DataFrame) -> pd.DataFrame:

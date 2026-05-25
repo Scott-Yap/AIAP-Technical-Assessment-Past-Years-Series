@@ -3,7 +3,7 @@ from pathlib import Path
 
 import joblib
 import yaml
-from sklearn.model_selection import GridSearchCV, train_test_split
+from sklearn.model_selection import GridSearchCV, cross_val_score, train_test_split
 from sklearn.pipeline import Pipeline
 
 from src.data_loader import load_data
@@ -38,29 +38,6 @@ def to_serializable_params(params):
     return serializable
 
 
-def get_param_grids():
-    """
-    Hyperparameter grids for selected models.
-
-    Parameter names use the 'model__' prefix because the estimator is inside
-    an sklearn Pipeline step named 'model'.
-    """
-    return {
-        "random_forest": {
-            "model__n_estimators": [100, 200],
-            "model__max_depth": [8, 12, None],
-            "model__min_samples_leaf": [1, 2, 4],
-            "model__max_features": ["sqrt", 1.0],
-        },
-        "gradient_boosting": {
-            "model__n_estimators": [100, 200],
-            "model__learning_rate": [0.05, 0.1],
-            "model__max_depth": [2, 3],
-            "model__min_samples_leaf": [1, 3],
-        },
-    }
-
-
 def train(config_path: str = "configs/config.yaml"):
     """
     Train and evaluate multiple regression models.
@@ -72,7 +49,7 @@ def train(config_path: str = "configs/config.yaml"):
     4. Fits preprocessing and model inside an sklearn Pipeline
     5. Tunes selected models using cross-validation on the training set
     6. Evaluates each model on train and test data
-    7. Selects the best model by lowest test MAE
+    7. Selects the best model by lowest cross-validation MAE on training data
     8. Saves metrics and the best fitted pipeline
     """
     with open(config_path, "r") as f:
@@ -97,7 +74,10 @@ def train(config_path: str = "configs/config.yaml"):
     )
 
     models = get_models(random_state=config["models"]["random_state"])
-    param_grids = get_param_grids()
+    tuning_config = config["models"]["tuning"]
+    param_grids = config["models"]["param_grids"]
+    cv = tuning_config["cv"]
+    scoring = tuning_config["scoring"]
 
     results = {}
     fitted_pipelines = {}
@@ -124,8 +104,8 @@ def train(config_path: str = "configs/config.yaml"):
             search = GridSearchCV(
                 estimator=pipeline,
                 param_grid=param_grids[model_name],
-                scoring="neg_mean_absolute_error",
-                cv=5,
+                scoring=scoring,
+                cv=cv,
                 n_jobs=-1,
                 verbose=1,
             )
@@ -141,8 +121,19 @@ def train(config_path: str = "configs/config.yaml"):
             print(f"Best CV MAE for {model_name}: {best_cv_mae:.4f}")
 
         else:
+            cv_scores = cross_val_score(
+                pipeline,
+                X_train,
+                y_train,
+                scoring=scoring,
+                cv=cv,
+                n_jobs=-1,
+            )
+            best_cv_mae = float(-cv_scores.mean())
             pipeline.fit(X_train, y_train)
             best_pipeline = pipeline
+
+            print(f"CV MAE for {model_name}: {best_cv_mae:.4f}")
 
         y_train_pred = best_pipeline.predict(X_train)
         y_test_pred = best_pipeline.predict(X_test)
@@ -169,13 +160,15 @@ def train(config_path: str = "configs/config.yaml"):
 
     best_model_name = min(
         results,
-        key=lambda name: results[name]["test"]["mae"],
+        key=lambda name: results[name]["best_cv_mae"],
     )
 
     best_pipeline = fitted_pipelines[best_model_name]
+    best_cv_mae = results[best_model_name]["best_cv_mae"]
     best_test_mae = results[best_model_name]["test"]["mae"]
 
     print(f"\nBest model: {best_model_name}")
+    print(f"Best CV MAE: {best_cv_mae:.4f}")
     print(f"Best test MAE: {best_test_mae:.4f}")
 
     metrics_path = Path(config["output"]["metrics_path"])
@@ -186,8 +179,8 @@ def train(config_path: str = "configs/config.yaml"):
 
     output = {
         "best_model": best_model_name,
-        "selection_metric": "test_mae",
-        "note": "Hyperparameter tuning, where applied, used cross-validation on the training set only.",
+        "selection_metric": "best_cv_mae",
+        "note": "Model selection and hyperparameter tuning used cross-validation on the training set only. The test set was reserved for final evaluation.",
         "results": results,
     }
 

@@ -1,12 +1,12 @@
 {
     "best_model": "random_forest",
-    "selection_metric": "test_mae",
-    "note": "Hyperparameter tuning, where applied, used cross-validation on the training set only.",
+    "selection_metric": "best_cv_mae",
+    "note": "Model selection and hyperparameter tuning used cross-validation on the training set only. The test set was reserved for final evaluation.",
     "results": {
         "dummy_mean": {
             "tuned": false,
             "best_params": null,
-            "best_cv_mae": null,
+            "best_cv_mae": 11.664296010174937,
             "train": {
                 "mae": 11.663968053510535,
                 "rmse": 13.988630372025922,
@@ -21,7 +21,7 @@
         "ridge": {
             "tuned": false,
             "best_params": null,
-            "best_cv_mae": null,
+            "best_cv_mae": 7.280245938062049,
             "train": {
                 "mae": 7.265627670413702,
                 "rmse": 9.084397792354633,
@@ -41,10 +41,10 @@
                 "model__min_samples_leaf": 2,
                 "model__n_estimators": 200
             },
-            "best_cv_mae": 5.369041736877735,
+            "best_cv_mae": 5.369041736877734,
             "train": {
-                "mae": 2.5059336644030537,
-                "rmse": 3.5114047623845486,
+                "mae": 2.505933664403054,
+                "rmse": 3.511404762384548,
                 "r2": 0.93698972165352
             },
             "test": {

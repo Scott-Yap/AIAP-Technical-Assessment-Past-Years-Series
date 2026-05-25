@@ -80,7 +80,7 @@ def run_error_analysis(config_path: str = "configs/config.yaml"):
     )
 
     # Recreate same train-test split
-    X_train, X_test, y_train, y_test = train_test_split(
+    _, X_test, _, y_test = train_test_split(
         X,
         y,
         test_size=config["split"]["test_size"],
@@ -134,37 +134,6 @@ def run_error_analysis(config_path: str = "configs/config.yaml"):
         ),
     }
 
-    # Save outputs
-    output_dir = Path("outputs/error_analysis")
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    results_df.to_csv(output_dir / "test_predictions.csv", index=False)
-    largest_errors.to_csv(output_dir / "largest_errors.csv", index=False)
-
-    with open(output_dir / "metrics.json", "w") as f:
-        json.dump(metrics, f, indent=4)
-
-    with open(output_dir / "weak_student_analysis.json", "w") as f:
-        json.dump(weak_student_analysis, f, indent=4)
-
-    # Feature importance
-    importance_df = get_feature_importance(pipeline)
-
-    if importance_df is not None:
-        importance_df.to_csv(output_dir / "feature_importance.csv", index=False)
-        print("\nTop 15 feature importances:")
-        print(importance_df.head(15))
-    else:
-        print("\nFeature importance is not available for this model type.")
-
-    print("\nOverall test metrics:")
-    print(metrics)
-
-    print("\nWeak student analysis:")
-    print(weak_student_analysis)
-
-    print(f"\nSaved error analysis outputs to: {output_dir}")
-
     threshold_results = []
 
     for threshold in [45, 50, 55, 60]:
@@ -195,10 +164,39 @@ def run_error_analysis(config_path: str = "configs/config.yaml"):
         )
 
     threshold_df = pd.DataFrame(threshold_results)
+
+    output_dir = Path("outputs/error_analysis")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    results_df.to_csv(output_dir / "test_predictions.csv", index=False)
+    largest_errors.to_csv(output_dir / "largest_errors.csv", index=False)
     threshold_df.to_csv(output_dir / "threshold_sensitivity.csv", index=False)
+
+    with open(output_dir / "metrics.json", "w") as f:
+        json.dump(metrics, f, indent=4)
+
+    with open(output_dir / "weak_student_analysis.json", "w") as f:
+        json.dump(weak_student_analysis, f, indent=4)
+
+    importance_df = get_feature_importance(pipeline)
+
+    if importance_df is not None:
+        importance_df.to_csv(output_dir / "feature_importance.csv", index=False)
+        print("\nTop 15 feature importances:")
+        print(importance_df.head(15))
+    else:
+        print("\nFeature importance is not available for this model type.")
+
+    print("\nOverall test metrics:")
+    print(metrics)
+
+    print("\nWeak student analysis:")
+    print(weak_student_analysis)
 
     print("\nThreshold sensitivity analysis:")
     print(threshold_df)
+
+    print(f"\nSaved error analysis outputs to: {output_dir}")
 
 if __name__ == "__main__":
     run_error_analysis()
