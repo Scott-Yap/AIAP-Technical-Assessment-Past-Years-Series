@@ -23,6 +23,8 @@ models:
     cv: 5
     scoring: "neg_mean_absolute_error"
   param_grids:
+    ridge:
+      model__alpha: [0.01, 0.1, 1.0, 10.0, 100.0]
     random_forest:
       model__n_estimators: [100, 200]
       model__max_depth: [8, 12, null]
